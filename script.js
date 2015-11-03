@@ -36,24 +36,53 @@ plot.append('g').attr('class','axis axis-y')
     .call(axisY);
 
 //Start importing data
-d3.csv('/data/world_bank_2012.csv', parse, dataLoaded);
+var readyData = d3.csv('data/fao_combined_world_1963_2013.csv', parse, dataLoaded);
+
 
 function parse(d){
+    var parsedRow = {
 
-    //Eliminate records for which gdp per capita isn't available
-
-    //Check "primary completion" and "urban population" columns
-    //if figure is unavailable and denoted as "..", replace it with undefined
-    //otherwise, parse the figure into numbers
-    return {
+            item: d['ItemName'],
+            value: +d["Value"],
+            year: d['Year']
 
     };
 
-
+    return parsedRow;
 
 }
 
 function dataLoaded(error, rows){
 
+    var dataByType= d3.nest()
+        .key(function(d) { return d.item; })
+        .entries(rows);
+
+    console.log(dataByType);
+    draw(dataByType);
+    return dataByType;
+    //console.log(rows);
 }
 
+var lineGenerator = d3.svg.line()
+    .x(function(d){return scaleX(d.year)})
+    .y(function(d){return scaleY(d.value)})
+    .interpolate('basis');
+
+function draw(data){
+    console.log("I AM IN DRAW!");
+    console.log(data);
+
+    //var timeSeries = d3.selectAll('.data-line') //yields a selection of 0 <path> elements
+    var timeSeries = d3.selectAll('path') //yields a selection of 0 <path> elements
+        .data(data) //joins to an array of two objects
+        .enter()
+        .append('path') //creates two new <path> elements as the enter set
+        .style("stroke", "#f00")
+        .attr('class', function(item){return item.key}); //each element will have class of either "coffee" or "tea"
+
+    timeSeries
+        .attr('d', function(item){
+            return lineGenerator(item.values);
+    });
+}
