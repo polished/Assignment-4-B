@@ -75,13 +75,33 @@ var lineGenerator = d3.svg.line()
 function draw(data){
     //console.log("I AM IN DRAW!");
     //console.log(data);
+    //
+    //plot.selectAll('point')
+    //    .data(data[0].values)
+    //    .enter()
+    //    .append('circle')
+    //    .attr('class','tea-data-point data-point')
+    //    .attr('r',3)
+    //    .attr('cx', function(d){console.log(d);
+    //        return scaleX(d.values[0].year);})
+    //    .attr('cy', function(d){return scaleY(d.values[0].value);})
+    //    .call(attachTooltip);
+
 
     var timeSeries = d3.select("svg").selectAll('.data-line') //yields a selection of 0 <path> elements
     //var timeSeries = d3.selectAll('path') //yields a selection of 0 <path> elements
         .data(data) //joins to an array of two objects
         .enter()
         .append('path') //creates two new <path> elements as the enter set
+        //.attr('class', function(item){return item.key}); //each element will have class of either "coffee" or "tea"
         .attr('class', function(item){return item.key}); //each element will have class of either "coffee" or "tea"
+
+    timeSeries
+        .append('circle')
+        .attr('r',3)
+        .attr('cx', function(d,i){return 100*i})
+        .attr('cy', function(d,i){return 100*i});
+
 
     timeSeries
         .call(attachTooltip)
@@ -104,10 +124,10 @@ function attachTooltip(selection){
             //console.log(d.values[1].year);
             //console.log(d.values[2]);
             console.log(d.key);
-            tooltip.select('#type').text(d.key);
-            tooltip.select('#year').html(d.year);
-            tooltip.select('#value').html(d.values[1].value);
-            //$("#type").text(d.key);
+            //tooltip.select('#type').text(d.key);
+            //tooltip.select('#year').html(d.year);
+            //tooltip.select('#value').html(d.values[1].value);
+            $("#type").text(d.key);
             ////$("#type").attr('text', d.key);
             //$("#year").text(d.values[1].year);
             ////$("#year").attr('text', d.values[1].year);

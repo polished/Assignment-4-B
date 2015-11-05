@@ -55,6 +55,12 @@ p{ font-size: .9em;}
 }
 .axis .tick text{
     fill:rgb(80,80,80)
+
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
 }
 
 .data-point{
@@ -66,11 +72,15 @@ p{ font-size: .9em;}
     .tea-data-point{ stroke:rgb(0,200,255); }
 .data-line{
     fill:none;
-    stroke-width:2px;
+    stroke-width:10px;
     stroke:rgb(150,150,150);
 }
-    .coffee-data-line{ stroke:red; }
-    .tea-data-line{ stroke:rgb(0,200,255); }
+/*.coffee-data-line{ stroke:red; }*/
+/*.tea-data-line{ stroke:rgb(0,200,255); }*/
+.coffee-data-line{ stroke:red; }
+.tea-data-line{ stroke:rgb(0,200,255); }
+
+
 .data-area{
     fill-opacity:.05;
     fill:rgb(150,150,150);
