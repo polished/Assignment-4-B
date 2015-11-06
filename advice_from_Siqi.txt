@@ -1,0 +1,27 @@
+var graphs = plot.selectAll('.graph')
+  .data(nestedData)
+ .enter()
+  .append('g')
+  .attr('class','graph');
+
+//so now I have two <g> elements, joined to the data object for tea and coffee, respectively
+
+graphs
+  .append('path')
+  .attr('d', function(d){
+     return lineGenerator(d.values);
+  };
+graphs
+  .selectAll('circle')
+  .data(function(d){ return d.values}) //!!!!!!!!!!!!!!!!!!!!!!!! This is the trickiest line !!!!!!!!!!!!!!!!!!!!!
+  .enter()
+  .append('circle')
+  .attr('cx',...)
+   ...
+
+
+   so what I'm saying above is this
+
+   1. <g> elements should be joined to the data objects for coffee and tea, respectively
+   2. because <path> is appended under <g>, it inherits the data object from <g>
+   3. However, under each <g> element, I need to append multiple circles, so another `.selectAll() - .data()` enter exit pattern needs to happen, but here I'm joining each circle to a data point for particular year

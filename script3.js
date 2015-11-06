@@ -73,36 +73,41 @@ var lineGenerator = d3.svg.line()
 
 function draw(data){
 
-
-    var timeSeries = d3.select("svg").selectAll('.data-line') //yields a selection of 0 <path> elements
-    //var timeSeries = d3.selectAll('path') //yields a selection of 0 <path> elements // doesn't work for me
-        .data(data) //joins to an array of two objects
-        .enter()
-        .append('path') //creates two new <path> elements as the enter set
-        //.attr('class', function(item){return item.key}); //each element will have class of either "coffee" or "tea"
-        .attr('class', function(item){return item.key}); //each element will have class of either "coffee" or "tea"
-
-    // THIS SECTION NEED HELP //
-
-    var prettyCircles = d3.select("svg").selectAll('circles')
+    var graphs = plot.selectAll('.graph')
         .data(data)
         .enter()
+        .append('g')
+        .attr('class','graph');
+
+//so now I have two <g> elements, joined to the data object for tea and coffee, respectively
+
+    graphs
+        .append('path')
+        .attr('class', function(item){return item.key}) //each element will have class of either "coffee" or "tea"
+        .attr('d', function(d){
+            return lineGenerator(d.values);
+        });
+
+    graphs
+        .selectAll('circle')
+        .data(function(d){
+            //console.log(d.values);
+            return d.values}) //!!!!!!!!!!!!!!!!!!!!!!!! This is the trickiest line !!!!!!!!!!!!!!!!!!!!!
+        .enter()
         .append('circle')
-        .attr('r',20)
-        .attr('cx', function(d){
-            console.log(d.values[2].value);
-            return scaleX(d.values[0].values)})
-        //.attr('cx', function(d){return scaleX(d.values[1].year)})
-        .attr('cy', function(d){return scaleY(d.values[1].value)});
+        .attr('r',5)
+        .attr('cx',function(d){return scaleX(d.year)})
+        .attr('cy',function(d){return scaleY(d.value)})
+        .attr('fill', function(d){
+            if(d.item == "Tea"){
+                return "rgb(0,200,255)";
+            } else {
+                return "red";
+            }
 
-    // END //
-
-    timeSeries
-        .call(attachTooltip)
-        .attr('d', function(item){
-            //console.log(item);
-            return lineGenerator(item.values);
-    });
+        })
+        .attr('stroke','black')
+        .call(attachTooltip);
 
     $(".Tea").attr('class', 'tea-data-line data-line'); // I have rename classes to match css styles. @Siqi, @Armin - is there a more elegant way to do that?
     $(".Coffee").attr('class', 'coffee-data-line data-line');
@@ -117,11 +122,11 @@ function attachTooltip(selection){
                 .style('opacity',1);
             //console.log(d.values[1].year);
             //console.log(d.values[2]);
-            console.log(d.key);
-            //tooltip.select('#type').text(d.key);
-            //tooltip.select('#year').html(d.year);
-            //tooltip.select('#value').html(d.values[1].value);
-            $("#type").text(d.key);
+            //console.log(d.item);
+            tooltip.select('#type').text(d.item);
+            tooltip.select('#year').html(d.year);
+            tooltip.select('#value').html(d.value);
+            //$("#type").text(d.key);
             ////$("#type").attr('text', d.key);
             //$("#year").text(d.values[1].year);
             ////$("#year").attr('text', d.values[1].year);
